@@ -4,7 +4,7 @@ public class Tabuleiro {
 
 	private int linhas;
 	private int colunas;
-	private Peca[][] pecas;// qual peçaa está em cada posição do tabuleiro
+	private Peca[][] pecas;// qual peça está em cada posição do tabuleiro
 
 	public Tabuleiro(int linhas, int colunas) {
 		this.linhas = linhas;
@@ -31,7 +31,13 @@ public class Tabuleiro {
 	public Peca peca(int linha, int coluna) {
 		return pecas[linha][coluna];
 	}
+
 	public Peca peca(Posicao posicao) {
 		return pecas[posicao.getLinha()][posicao.getColuna()];
+	}
+
+	public void colocarPeca(Peca peca, Posicao posicao) {
+		pecas[posicao.getLinha()][posicao.getColuna()] = peca;
+		peca.posicao = posicao;
 	}
 }
