@@ -1,13 +1,13 @@
 package tabuleiro;
 
-public class excecaoTabuleiro extends RuntimeException {
+public class ExcecaoTabuleiro extends RuntimeException {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public excecaoTabuleiro(String msg) {
+	public ExcecaoTabuleiro(String msg) {
 		super(msg);
 	}
 
