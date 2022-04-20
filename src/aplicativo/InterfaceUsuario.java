@@ -28,6 +28,11 @@ public class InterfaceUsuario {
 	public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
 //cores para ser impresssas no console	
 
+	public static void limpaTela() {
+		System.out.print("\033[H\033[2J");
+		System.out.flush();
+	}
+	
 	public static posicaoXadrez lerPosicaoXadrez(Scanner sc) {
 		try {
 			String s = sc.nextLine();
