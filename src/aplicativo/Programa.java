@@ -19,7 +19,7 @@ public class Programa {
 			try {
 				InterfaceUsuario.limpaTela();
 				
-				InterfaceUsuario.imprimeTabuleiro(partida.getpecas());
+				InterfaceUsuario.imprimePartida(partida);
 				System.out.println();
 				System.out.println("Origem: ");
 				posicaoXadrez inicio = InterfaceUsuario.lerPosicaoXadrez(sc);
