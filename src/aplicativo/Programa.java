@@ -17,6 +17,7 @@ public class Programa {
 		while (true) {
 			try {
 				InterfaceUsuario.limpaTela();
+				
 				InterfaceUsuario.imprimePecas(partida.getpecas());
 				System.out.println();
 				System.out.println("Origem: ");
