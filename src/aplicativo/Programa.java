@@ -7,6 +7,7 @@ import xadrez.ExcecaoXadrez;
 import xadrez.Partida;
 import xadrez.PecaXadrez;
 import xadrez.posicaoXadrez;
+import aplicativo.InterfaceUsuario;
 
 public class Programa {
 
@@ -18,10 +19,15 @@ public class Programa {
 			try {
 				InterfaceUsuario.limpaTela();
 				
-				InterfaceUsuario.imprimePecas(partida.getpecas());
+				InterfaceUsuario.imprimeTabuleiro(partida.getpecas());
 				System.out.println();
 				System.out.println("Origem: ");
 				posicaoXadrez inicio = InterfaceUsuario.lerPosicaoXadrez(sc);
+				
+				boolean[][] movimentosPossiveis = partida.movimentosPossiveis(inicio);
+				InterfaceUsuario.limpaTela();
+				InterfaceUsuario.imprimeTabuleiro(partida.getpecas(), movimentosPossiveis);
+				
 				System.out.println();
 				System.out.println("Alvo:");
 				posicaoXadrez destino = InterfaceUsuario.lerPosicaoXadrez(sc);
