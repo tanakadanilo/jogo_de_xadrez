@@ -54,13 +54,18 @@ public class InterfaceUsuario {
 
 		System.out.println();
 		imprimePecasCapturadas(capturadas);
-		
+
 		System.out.println();
 		System.out.println("Turno: " + partida.getTurno());
-		System.out.println("Aguardando jogador: " + partida.getJogadorAtual());
-		
-		if(partida.getCheck()) {
-			System.out.println("CHECK!");
+		if (!partida.getCheckMate()) {//se não for checkMate
+			System.out.println("Aguardando jogador: " + partida.getJogadorAtual());
+
+			if (partida.getCheck()) {
+				System.out.println("CHECK!");
+			}
+		} else {
+			System.out.println("CHECKMATE!");
+			System.out.println("Ganhador: " + partida.getJogadorAtual());
 		}
 	}
 
@@ -118,6 +123,7 @@ public class InterfaceUsuario {
 		System.out.println(Arrays.toString(branco.toArray()));
 		System.out.print(ANSI_RESET);// resetando cor
 
+		System.out.println("Pretas: ");
 		System.out.print(ANSI_YELLOW);// imprimindo na cor Amarela
 		System.out.println(Arrays.toString(preta.toArray()));
 		System.out.print(ANSI_RESET);// resetando cor
