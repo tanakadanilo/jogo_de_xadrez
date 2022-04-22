@@ -58,6 +58,10 @@ public class InterfaceUsuario {
 		System.out.println();
 		System.out.println("Turno: " + partida.getTurno());
 		System.out.println("Aguardando jogador: " + partida.getJogadorAtual());
+		
+		if(partida.getCheck()) {
+			System.out.println("CHECK!");
+		}
 	}
 
 	public static void imprimeTabuleiro(PecaXadrez[][] pecas) {
