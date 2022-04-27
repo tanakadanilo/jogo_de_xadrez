@@ -18,6 +18,8 @@ public class Programa {
 		List<PecaXadrez	> capturadas = new ArrayList<>();
 
 		while (!partida.getCheckMate()) {
+			InterfaceUsuario.limpaTela();
+
 			try {
 				InterfaceUsuario.limpaTela();
 				

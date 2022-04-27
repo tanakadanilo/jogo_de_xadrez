@@ -104,6 +104,28 @@ public class Partida {
 			pecasCapturadas.add(pecaCapturada);
 		}
 
+		// movimento especial castling pequeno
+		if (p instanceof Rei && destino.getColuna() == inicio.getColuna() + 2) {
+			Posicao origemTorre = new Posicao(inicio.getLinha(), inicio.getColuna() + 3);
+			Posicao DestinoTorre = new Posicao(inicio.getLinha(), inicio.getColuna() + 1);
+
+			PecaXadrez torre = (PecaXadrez) tabuleiro.removePeca(origemTorre);
+			tabuleiro.colocarPeca(torre, DestinoTorre);
+
+			torre.aumentaContMovimentos();
+		}
+
+		// movimento especial castling grande
+		if (p instanceof Rei && destino.getColuna() == inicio.getColuna() - 2) {
+			Posicao origemTorre = new Posicao(inicio.getLinha(), inicio.getColuna() - 4);
+			Posicao DestinoTorre = new Posicao(inicio.getLinha(), inicio.getColuna() - 1);
+
+			PecaXadrez torre = (PecaXadrez) tabuleiro.removePeca(origemTorre);
+			tabuleiro.colocarPeca(torre, DestinoTorre);
+
+			torre.aumentaContMovimentos();
+		}
+
 		return pecaCapturada;
 	}
 
@@ -117,6 +139,28 @@ public class Partida {
 			tabuleiro.colocarPeca(pecaCapturada, destino);
 			pecasCapturadas.remove(pecaCapturada);
 			pecasNoTabuleiro.add(pecaCapturada);
+		}
+
+		// movimento especial castling pequeno
+		if (p instanceof Rei && destino.getColuna() == inicial.getColuna() + 2) {
+			Posicao origemTorre = new Posicao(inicial.getLinha(), inicial.getColuna() + 3);
+			Posicao DestinoTorre = new Posicao(inicial.getLinha(), inicial.getColuna() + 1);
+
+			PecaXadrez torre = (PecaXadrez) tabuleiro.removePeca(DestinoTorre);
+			tabuleiro.colocarPeca(torre, origemTorre);
+
+			torre.diminuiContMovimentos();
+		}
+
+		// movimento especial castling grande
+		if (p instanceof Rei && destino.getColuna() == inicial.getColuna() - 2) {
+			Posicao origemTorre = new Posicao(inicial.getLinha(), inicial.getColuna() - 4);
+			Posicao DestinoTorre = new Posicao(inicial.getLinha(), inicial.getColuna() - 1);
+
+			PecaXadrez torre = (PecaXadrez) tabuleiro.removePeca(DestinoTorre);
+			tabuleiro.colocarPeca(torre, origemTorre);
+
+			torre.aumentaContMovimentos();
 		}
 	}
 
@@ -215,7 +259,7 @@ public class Partida {
 		colocarNovaPeca('b', 1, new Cavalo(tabuleiro, Cor.BRANCO));
 		colocarNovaPeca('c', 1, new Bispo(tabuleiro, Cor.BRANCO));
 		colocarNovaPeca('d', 1, new Rainha(tabuleiro, Cor.BRANCO));
-		colocarNovaPeca('e', 1, new Rei(tabuleiro, Cor.BRANCO));
+		colocarNovaPeca('e', 1, new Rei(tabuleiro, Cor.BRANCO, this));
 		colocarNovaPeca('f', 1, new Bispo(tabuleiro, Cor.BRANCO));
 		colocarNovaPeca('g', 1, new Cavalo(tabuleiro, Cor.BRANCO));
 		colocarNovaPeca('h', 1, new Torre(tabuleiro, Cor.BRANCO));
@@ -232,8 +276,9 @@ public class Partida {
 		colocarNovaPeca('a', 8, new Torre(tabuleiro, Cor.PRETO));
 		colocarNovaPeca('b', 8, new Cavalo(tabuleiro, Cor.PRETO));
 		colocarNovaPeca('c', 8, new Bispo(tabuleiro, Cor.PRETO));
-		colocarNovaPeca('d', 8, new Rei(tabuleiro, Cor.PRETO));
-		colocarNovaPeca('e', 8, new Rainha(tabuleiro, Cor.PRETO));
+		colocarNovaPeca('d', 8, new Rainha(tabuleiro, Cor.PRETO));
+		 colocarNovaPeca('e', 8, new Rei(tabuleiro, Cor.PRETO, this));
+		
 		colocarNovaPeca('f', 8, new Bispo(tabuleiro, Cor.PRETO));
 		colocarNovaPeca('g', 8, new Cavalo(tabuleiro, Cor.PRETO));
 		colocarNovaPeca('h', 8, new Torre(tabuleiro, Cor.PRETO));

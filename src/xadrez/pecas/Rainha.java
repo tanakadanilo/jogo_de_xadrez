@@ -5,7 +5,7 @@ import tabuleiro.Tabuleiro;
 import xadrez.Cor;
 import xadrez.PecaXadrez;
 
-public class Rainha extends PecaXadrez{
+public class Rainha extends PecaXadrez {
 
 	public Rainha(Tabuleiro tabuleiro, Cor cor) {
 		super(tabuleiro, cor);
@@ -13,7 +13,7 @@ public class Rainha extends PecaXadrez{
 
 	@Override
 	public boolean[][] movimentosPossiveis() {
-		
+
 		boolean[][] mat = new boolean[getTabuleiro().getLinhas()][getTabuleiro().getColunas()];
 
 		Posicao p = new Posicao(posicao.getLinha(), posicao.getColuna());
@@ -95,7 +95,10 @@ public class Rainha extends PecaXadrez{
 			mat[p.getLinha()][p.getColuna()] = true;
 			p.setValues(p.getLinha() + 1, p.getColuna() - 1);
 		}
-		
+		if (getTabuleiro().posicaoExiste(p) && existePecaAdversaria(p)) {
+			mat[p.getLinha()][p.getColuna()] = true;
+		}
+
 		return mat;
 	}
 
@@ -104,7 +107,4 @@ public class Rainha extends PecaXadrez{
 		return "Q";
 	}
 
-	
-	
-	
 }
