@@ -21,6 +21,7 @@ public class Partida {
 	private Cor jogadorAtual;
 	private boolean check;
 	private boolean checkMate;
+	private PecaXadrez vulneravelEnPeassant;
 
 	List<Peca> pecasNoTabuleiro = new ArrayList<>();
 	List<Peca> pecasCapturadas = new ArrayList<>();
@@ -50,6 +51,10 @@ public class Partida {
 		return this.checkMate;
 	}
 
+	public PecaXadrez getvulneravelEnPeassant() {
+		return this.vulneravelEnPeassant;
+	}
+
 	public PecaXadrez[][] getpecas() {
 		PecaXadrez[][] mat = new PecaXadrez[tabuleiro.getLinhas()][tabuleiro.getColunas()];
 
@@ -75,12 +80,22 @@ public class Partida {
 			throw new ExcecaoXadrez("Você não pode se colocar em xeque");
 		}
 
+		PecaXadrez pecaMovida = (PecaXadrez) tabuleiro.peca(alvo);
+
 		check = testaCheck(oponente(jogadorAtual)) ? true : false;// testa se deu check no oponente
 
 		if (testaCheckMate(oponente(jogadorAtual))) {
 			checkMate = true;
 		} else {
 			proximoTurno();
+		}
+
+		// movimento especial enPeassant
+		if (pecaMovida instanceof Peao
+				&& (alvo.getLinha() == inicial.getLinha() + 2 || alvo.getLinha() == inicial.getLinha() - 2)) {
+			vulneravelEnPeassant = pecaMovida;
+		} else {
+			vulneravelEnPeassant = null;
 		}
 		return (PecaXadrez) pecaCapturada;
 	}
@@ -126,6 +141,26 @@ public class Partida {
 			torre.aumentaContMovimentos();
 		}
 
+		// movimento especial enPeassant
+		if (p instanceof Peao) {
+			if (inicio.getColuna() != destino.getColuna() && pecaCapturada == null) {// caso o peao atacou uma casa
+																						// vazia, foi um enPeassant
+
+				Posicao posicaoPeaoCapturado;
+
+				if (p.getCor() == Cor.BRANCO) {
+					posicaoPeaoCapturado = new Posicao(destino.getLinha() + 1, destino.getColuna());
+				} else {
+					posicaoPeaoCapturado = new Posicao(destino.getLinha() - 1, destino.getColuna());
+				}
+
+				pecaCapturada = tabuleiro.removePeca(posicaoPeaoCapturado);
+				pecasCapturadas.add(pecaCapturada);
+				pecasNoTabuleiro.remove(pecaCapturada);
+
+			}
+		}
+
 		return pecaCapturada;
 	}
 
@@ -160,7 +195,30 @@ public class Partida {
 			PecaXadrez torre = (PecaXadrez) tabuleiro.removePeca(DestinoTorre);
 			tabuleiro.colocarPeca(torre, origemTorre);
 
-			torre.aumentaContMovimentos();
+			torre.diminuiContMovimentos();
+		}
+
+		// movimento especial enPeassant
+		if (p instanceof Peao) {
+			if (inicial.getColuna() != destino.getColuna() && pecaCapturada == vulneravelEnPeassant) {// caso o peao
+																										// tenha feito
+																										// um enPeassant
+
+				PecaXadrez peao = (PecaXadrez) tabuleiro.removePeca(destino);// a peça foi devolvida para a posição
+																				// errada, por essa jogada fugir ao
+																				// padrao do xadrez, então mover para a
+																				// posição certa
+				Posicao posicaoPeaoCapturado;
+
+				if (p.getCor() == Cor.BRANCO) {
+					posicaoPeaoCapturado = new Posicao(3, destino.getColuna());
+				} else {
+					posicaoPeaoCapturado = new Posicao(4, destino.getColuna());
+				}
+
+				tabuleiro.colocarPeca(peao, posicaoPeaoCapturado);//colocando peao na posicao certa
+
+			}
 		}
 	}
 
@@ -264,32 +322,32 @@ public class Partida {
 		colocarNovaPeca('g', 1, new Cavalo(tabuleiro, Cor.BRANCO));
 		colocarNovaPeca('h', 1, new Torre(tabuleiro, Cor.BRANCO));
 
-		colocarNovaPeca('a', 2, new Peao(tabuleiro, Cor.BRANCO));
-		colocarNovaPeca('b', 2, new Peao(tabuleiro, Cor.BRANCO));
-		colocarNovaPeca('c', 2, new Peao(tabuleiro, Cor.BRANCO));
-		colocarNovaPeca('d', 2, new Peao(tabuleiro, Cor.BRANCO));
-		colocarNovaPeca('e', 2, new Peao(tabuleiro, Cor.BRANCO));
-		colocarNovaPeca('f', 2, new Peao(tabuleiro, Cor.BRANCO));
-		colocarNovaPeca('g', 2, new Peao(tabuleiro, Cor.BRANCO));
-		colocarNovaPeca('h', 2, new Peao(tabuleiro, Cor.BRANCO));
+		colocarNovaPeca('a', 2, new Peao(tabuleiro, Cor.BRANCO, this));
+		colocarNovaPeca('b', 2, new Peao(tabuleiro, Cor.BRANCO, this));
+		colocarNovaPeca('c', 2, new Peao(tabuleiro, Cor.BRANCO, this));
+		colocarNovaPeca('d', 2, new Peao(tabuleiro, Cor.BRANCO, this));
+		colocarNovaPeca('e', 2, new Peao(tabuleiro, Cor.BRANCO, this));
+		colocarNovaPeca('f', 2, new Peao(tabuleiro, Cor.BRANCO, this));
+		colocarNovaPeca('g', 2, new Peao(tabuleiro, Cor.BRANCO, this));
+		colocarNovaPeca('h', 2, new Peao(tabuleiro, Cor.BRANCO, this));
 
 		colocarNovaPeca('a', 8, new Torre(tabuleiro, Cor.PRETO));
 		colocarNovaPeca('b', 8, new Cavalo(tabuleiro, Cor.PRETO));
 		colocarNovaPeca('c', 8, new Bispo(tabuleiro, Cor.PRETO));
 		colocarNovaPeca('d', 8, new Rainha(tabuleiro, Cor.PRETO));
-		 colocarNovaPeca('e', 8, new Rei(tabuleiro, Cor.PRETO, this));
-		
+		colocarNovaPeca('e', 8, new Rei(tabuleiro, Cor.PRETO, this));
+
 		colocarNovaPeca('f', 8, new Bispo(tabuleiro, Cor.PRETO));
 		colocarNovaPeca('g', 8, new Cavalo(tabuleiro, Cor.PRETO));
 		colocarNovaPeca('h', 8, new Torre(tabuleiro, Cor.PRETO));
 
-		colocarNovaPeca('a', 7, new Peao(tabuleiro, Cor.PRETO));
-		colocarNovaPeca('b', 7, new Peao(tabuleiro, Cor.PRETO));
-		colocarNovaPeca('c', 7, new Peao(tabuleiro, Cor.PRETO));
-		colocarNovaPeca('d', 7, new Peao(tabuleiro, Cor.PRETO));
-		colocarNovaPeca('e', 7, new Peao(tabuleiro, Cor.PRETO));
-		colocarNovaPeca('f', 7, new Peao(tabuleiro, Cor.PRETO));
-		colocarNovaPeca('g', 7, new Peao(tabuleiro, Cor.PRETO));
-		colocarNovaPeca('h', 7, new Peao(tabuleiro, Cor.PRETO));
+		colocarNovaPeca('a', 7, new Peao(tabuleiro, Cor.PRETO, this));
+		colocarNovaPeca('b', 7, new Peao(tabuleiro, Cor.PRETO, this));
+		colocarNovaPeca('c', 7, new Peao(tabuleiro, Cor.PRETO, this));
+		colocarNovaPeca('d', 7, new Peao(tabuleiro, Cor.PRETO, this));
+		colocarNovaPeca('e', 7, new Peao(tabuleiro, Cor.PRETO, this));
+		colocarNovaPeca('f', 7, new Peao(tabuleiro, Cor.PRETO, this));
+		colocarNovaPeca('g', 7, new Peao(tabuleiro, Cor.PRETO, this));
+		colocarNovaPeca('h', 7, new Peao(tabuleiro, Cor.PRETO, this));
 	}
 }

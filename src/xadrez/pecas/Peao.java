@@ -1,14 +1,19 @@
 package xadrez.pecas;
 
+import tabuleiro.Peca;
 import tabuleiro.Posicao;
 import tabuleiro.Tabuleiro;
 import xadrez.Cor;
+import xadrez.Partida;
 import xadrez.PecaXadrez;
 
 public class Peao extends PecaXadrez {
 
-	public Peao(Tabuleiro tabuleiro, Cor cor) {
+	private Partida partida;
+
+	public Peao(Tabuleiro tabuleiro, Cor cor, Partida partida) {
 		super(tabuleiro, cor);
+		this.partida = partida;
 	}
 
 	@Override
@@ -42,6 +47,32 @@ public class Peao extends PecaXadrez {
 			if (getTabuleiro().posicaoExiste(p) && existePecaAdversaria(p)) {// movimento de ataque para nordeste
 				mat[p.getLinha()][p.getColuna()] = true;
 			}
+
+			// movimento especial enPEassant
+			if (this.posicao.getLinha() == 3) {// a linha onde o peão tem de estar
+				Posicao esquerda = new Posicao(this.posicao.getLinha(), this.posicao.getColuna() - 1);
+
+				if (getTabuleiro().posicaoExiste(esquerda) && existePecaAdversaria(esquerda)
+						&& getTabuleiro().peca(esquerda) == partida.getvulneravelEnPeassant()) {// caso a peca na
+																								// esquerda seja a peca
+																								// vulneravel a
+																								// enPeassant
+					mat[esquerda.getLinha() - 1][esquerda.getColuna()] = true;// o peão se move para cima do peão q sera
+																				// capturado, não para a mesma posicao
+				}
+
+				Posicao direita = new Posicao(this.posicao.getLinha(), this.posicao.getColuna() + 1);
+
+				if (getTabuleiro().posicaoExiste(direita) && existePecaAdversaria(direita)
+						&& getTabuleiro().peca(direita) == partida.getvulneravelEnPeassant()) {// caso a peca na
+																								// esquerda seja a peca
+																								// vulneravel a
+																								// enPeassant
+					mat[direita.getLinha() - 1][direita.getColuna()] = true;// o peão se move para cima do peão q sera
+																			// capturado, não para a mesma posicao
+				}
+			}
+
 		} else {
 			p.setValues(super.posicao.getLinha() + 1, super.posicao.getColuna());
 
@@ -66,6 +97,31 @@ public class Peao extends PecaXadrez {
 			p.setValues(super.posicao.getLinha() + 1, super.posicao.getColuna() + 1);
 			if (getTabuleiro().posicaoExiste(p) && existePecaAdversaria(p)) {// movimento de ataque para nordeste
 				mat[p.getLinha()][p.getColuna()] = true;
+			}
+
+			// movimento especial enPeassant
+			if (this.posicao.getLinha() == 4) {// a linha onde o peão tem de estar
+				Posicao esquerda = new Posicao(this.posicao.getLinha(), this.posicao.getColuna() - 1);
+
+				if (getTabuleiro().posicaoExiste(esquerda) && existePecaAdversaria(esquerda)
+						&& getTabuleiro().peca(esquerda) == partida.getvulneravelEnPeassant()) {// caso a peca na
+																								// esquerda seja a peca
+																								// vulneravel a
+																								// enPeassant
+					mat[esquerda.getLinha() + 1][esquerda.getColuna()] = true;// o peão se move para cima do peão q sera
+																				// capturado, não para a mesma posicao
+				}
+
+				Posicao direita = new Posicao(this.posicao.getLinha(), this.posicao.getColuna() + 1);
+
+				if (getTabuleiro().posicaoExiste(direita) && existePecaAdversaria(direita)
+						&& getTabuleiro().peca(direita) == partida.getvulneravelEnPeassant()) {// caso a peca na
+																								// esquerda seja a peca
+																								// vulneravel a
+																								// enPeassant
+					mat[direita.getLinha() + 1][direita.getColuna()] = true;// o peão se move para cima do peão q sera
+																			// capturado, não para a mesma posicao
+				}
 			}
 		}
 
