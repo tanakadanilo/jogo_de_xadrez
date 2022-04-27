@@ -1,5 +1,6 @@
 package xadrez;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ public class Partida {
 	private boolean check;
 	private boolean checkMate;
 	private PecaXadrez vulneravelEnPeassant;
+	private PecaXadrez promovida;
 
 	List<Peca> pecasNoTabuleiro = new ArrayList<>();
 	List<Peca> pecasCapturadas = new ArrayList<>();
@@ -55,6 +57,10 @@ public class Partida {
 		return this.vulneravelEnPeassant;
 	}
 
+	public PecaXadrez getPromovida() {
+		return this.promovida;
+	}
+
 	public PecaXadrez[][] getpecas() {
 		PecaXadrez[][] mat = new PecaXadrez[tabuleiro.getLinhas()][tabuleiro.getColunas()];
 
@@ -75,13 +81,24 @@ public class Partida {
 
 		Peca pecaCapturada = mover(inicial, alvo);
 
-		if (testaCheck(jogadorAtual)) {
+		// jogada especial promocao
+
+		if (testaCheck(jogadorAtual)) {// caso o jogador tenha colocado a si mesmo em check
 			desfazerMover(inicial, alvo, pecaCapturada);
 			throw new ExcecaoXadrez("Você não pode se colocar em xeque");
 		}
 
 		PecaXadrez pecaMovida = (PecaXadrez) tabuleiro.peca(alvo);
 
+		promovida = null;
+		if (pecaMovida instanceof Peao) {
+			if (pecaMovida.getCor() == Cor.BRANCO && alvo.getLinha() == 0
+					|| pecaMovida.getCor() == Cor.PRETO && alvo.getLinha() == 7) {
+
+				promovida = (PecaXadrez) tabuleiro.peca(alvo);
+				promovida = trocarPecaPromovida("Q");
+			}
+		}
 		check = testaCheck(oponente(jogadorAtual)) ? true : false;// testa se deu check no oponente
 
 		if (testaCheckMate(oponente(jogadorAtual))) {
@@ -104,6 +121,43 @@ public class Partida {
 		Posicao posicao = posicaoinicial.toPosicao();
 		validaPosicaoInicial(posicao);
 		return tabuleiro.peca(posicao).movimentosPossiveis();
+	}
+
+	public PecaXadrez trocarPecaPromovida(String tipo) {
+		if (promovida == null) {// caso não tenha peça a ser promovida
+			throw new IllegalStateException("Não existe peça para ser promovida");
+		}
+		if (!tipo.equalsIgnoreCase("Q") && !tipo.equalsIgnoreCase("B") && !tipo.equalsIgnoreCase("C")
+				&& !tipo.equalsIgnoreCase("T")) {
+			throw new InvalidParameterException("Tipo inválido para promover");
+		}
+
+		Posicao posicao = promovida.getPosicaoXadres().toPosicao();
+
+		Peca p = tabuleiro.removePeca(posicao);
+		pecasNoTabuleiro.remove(p);// retirando peão do jogo, para ser substituido
+
+		PecaXadrez novaPeca = novaPeca(tipo, promovida.getCor());
+
+		tabuleiro.colocarPeca(novaPeca, posicao);
+		pecasNoTabuleiro.add(novaPeca);
+
+		return novaPeca;
+	}
+
+	private PecaXadrez novaPeca(String tipo, Cor cor) {
+		if (tipo.equalsIgnoreCase("Q")) {
+			return new Rainha(tabuleiro, cor);
+		}
+		if (tipo.equalsIgnoreCase("B")) {
+			return new Bispo(tabuleiro, cor);
+		}
+		if (tipo.equalsIgnoreCase("C")) {
+			return new Cavalo(tabuleiro, cor);
+		}
+
+		// sem if para não dar problema de compilação
+		return new Torre(tabuleiro, cor);
 	}
 
 	private Peca mover(Posicao inicio, Posicao destino) {
@@ -216,7 +270,7 @@ public class Partida {
 					posicaoPeaoCapturado = new Posicao(4, destino.getColuna());
 				}
 
-				tabuleiro.colocarPeca(peao, posicaoPeaoCapturado);//colocando peao na posicao certa
+				tabuleiro.colocarPeca(peao, posicaoPeaoCapturado);// colocando peao na posicao certa
 
 			}
 		}
@@ -324,7 +378,7 @@ public class Partida {
 
 		colocarNovaPeca('a', 2, new Peao(tabuleiro, Cor.BRANCO, this));
 		colocarNovaPeca('b', 2, new Peao(tabuleiro, Cor.BRANCO, this));
-		colocarNovaPeca('c', 2, new Peao(tabuleiro, Cor.BRANCO, this));
+		colocarNovaPeca('c', 2, new Peao(tabuleiro, Cor.PRETO, this));
 		colocarNovaPeca('d', 2, new Peao(tabuleiro, Cor.BRANCO, this));
 		colocarNovaPeca('e', 2, new Peao(tabuleiro, Cor.BRANCO, this));
 		colocarNovaPeca('f', 2, new Peao(tabuleiro, Cor.BRANCO, this));
@@ -342,7 +396,7 @@ public class Partida {
 		colocarNovaPeca('h', 8, new Torre(tabuleiro, Cor.PRETO));
 
 		colocarNovaPeca('a', 7, new Peao(tabuleiro, Cor.PRETO, this));
-		colocarNovaPeca('b', 7, new Peao(tabuleiro, Cor.PRETO, this));
+		colocarNovaPeca('b', 7, new Peao(tabuleiro, Cor.BRANCO, this));
 		colocarNovaPeca('c', 7, new Peao(tabuleiro, Cor.PRETO, this));
 		colocarNovaPeca('d', 7, new Peao(tabuleiro, Cor.PRETO, this));
 		colocarNovaPeca('e', 7, new Peao(tabuleiro, Cor.PRETO, this));
