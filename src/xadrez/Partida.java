@@ -129,7 +129,7 @@ public class Partida {
 		}
 		if (!tipo.equalsIgnoreCase("Q") && !tipo.equalsIgnoreCase("B") && !tipo.equalsIgnoreCase("C")
 				&& !tipo.equalsIgnoreCase("T")) {
-			throw new InvalidParameterException("Tipo inválido para promover");
+			return promovida;
 		}
 
 		Posicao posicao = promovida.getPosicaoXadres().toPosicao();
@@ -378,7 +378,7 @@ public class Partida {
 
 		colocarNovaPeca('a', 2, new Peao(tabuleiro, Cor.BRANCO, this));
 		colocarNovaPeca('b', 2, new Peao(tabuleiro, Cor.BRANCO, this));
-		colocarNovaPeca('c', 2, new Peao(tabuleiro, Cor.PRETO, this));
+		colocarNovaPeca('c', 2, new Peao(tabuleiro, Cor.BRANCO, this));
 		colocarNovaPeca('d', 2, new Peao(tabuleiro, Cor.BRANCO, this));
 		colocarNovaPeca('e', 2, new Peao(tabuleiro, Cor.BRANCO, this));
 		colocarNovaPeca('f', 2, new Peao(tabuleiro, Cor.BRANCO, this));
@@ -396,7 +396,7 @@ public class Partida {
 		colocarNovaPeca('h', 8, new Torre(tabuleiro, Cor.PRETO));
 
 		colocarNovaPeca('a', 7, new Peao(tabuleiro, Cor.PRETO, this));
-		colocarNovaPeca('b', 7, new Peao(tabuleiro, Cor.BRANCO, this));
+		colocarNovaPeca('b', 7, new Peao(tabuleiro, Cor.PRETO, this));
 		colocarNovaPeca('c', 7, new Peao(tabuleiro, Cor.PRETO, this));
 		colocarNovaPeca('d', 7, new Peao(tabuleiro, Cor.PRETO, this));
 		colocarNovaPeca('e', 7, new Peao(tabuleiro, Cor.PRETO, this));

@@ -45,6 +45,14 @@ public class Programa {
 				if (partida.getPromovida() != null) {
 					System.out.println("Pra Qual peça deseja promover este peão? (Q/B/C/T)");
 					String tipo = sc.nextLine();
+					
+					while (!tipo.equalsIgnoreCase("Q") && !tipo.equalsIgnoreCase("B") && !tipo.equalsIgnoreCase("C")
+							&& !tipo.equalsIgnoreCase("T")) {
+						System.out.println("valor inválido!");
+						System.out.println("Pra Qual peça deseja promover este peão? (Q/B/C/T)");
+						 tipo = sc.nextLine();
+						
+					}
 					partida.trocarPecaPromovida(tipo);
 				}
 			} catch (ExcecaoXadrez e) {
